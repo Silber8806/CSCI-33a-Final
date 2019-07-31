@@ -1,4 +1,4 @@
-#final-project
+#Final Project
 
 ##App Name
 Name: CompareRate
