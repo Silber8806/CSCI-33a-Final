@@ -1,0 +1,54 @@
+{% extends 'templates/base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div id="user-form" class="col-md-6 mx-auto">
+                    <div class="card rounded-0">
+                        <div class="card-header">
+                            <h3 class="mb-0">Login</h3>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" action="{% url 'login' %}">
+                                {% csrf_token %}
+                                {% for field in form %}
+                                <div class="form-group">
+                                    {{ field.label_tag }}<br>
+                                    {{ field }}
+                                </div>
+                                {% if field.help_text %}
+                                <small style="color: grey">{{ field.help_text|safe }}</small>
+                                {% endif %}
+                                {% endfor %}
+                                {% if form.non_field_errors %}
+                                <ul class='form-errors'>
+                                    {% for error in form.non_field_errors %}
+                                    <li class="error-message">{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                                {% endif %}
+                                <div id="action-options">
+                                    <a href="{% url 'index' %}">
+                                        <div class="btn btn-danger btn-lg" id="xbtn">Cancel
+                                        </div>
+                                    </a>
+                                    <a href="{% url 'signup' %}">
+                                        <div class="btn btn-primary btn-lg" id="regbutton">Sign-up
+                                        </div>
+                                    </a>
+                                    <button type="submit" class="btn btn-success btn-lg" id="btnLogin">Login
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
