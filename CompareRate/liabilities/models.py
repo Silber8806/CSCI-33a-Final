@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 
-class Loans(models.Model):
+class Loan(models.Model):
     loan_provider = models.CharField(max_length=256)
     loan_principal = models.DecimalField(max_digits=12, decimal_places=2)
     loan_terms = models.IntegerField()
