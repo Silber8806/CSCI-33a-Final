@@ -1,7 +1,7 @@
 # final-project
 
 # App Name
- CompareRate#
+Name: CompareRate
 Allows a user (login) to list commonly held non-commercial liabilities: student loan, 
 mortgage and credit card debt and analyze repayment/interest rate changes to see the
 impact on overall cashflow.  Part of the app will pull in information on say Zillow 
