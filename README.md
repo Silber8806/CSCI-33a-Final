@@ -9,7 +9,7 @@ about house prices/mortgage statistics and I will also list common costs associa
 with these loans: eg closing costs, repair costs, origination fees. 
 
 
-Milestones
+#Milestones
 When it comes to app development, most everything takes longer to implement than you expect.
 And so it's not uncommon to accomplish less in a fixed amount of time than you hope.
 
