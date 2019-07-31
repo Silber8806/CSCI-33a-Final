@@ -27,3 +27,4 @@ how their cashflow is being impacted by said loans.
 Call Zillow API and integrate it.  Learn flask-login and possibly flask-forms.  
 Possibly learn how to use SQL-Alchemy with flask.  Not 100% sure.  I'm really interested 
 in personal finance and so want to build an app around it in some way.
+
