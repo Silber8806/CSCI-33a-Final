@@ -1,20 +1,42 @@
+import math
+
 from django.db import models
 
 # Create your models here.
 
 class Loan(models.Model):
-    loan_provider = models.CharField(max_length=256)
-    loan_principal = models.DecimalField(max_digits=12, decimal_places=2)
-    loan_terms = models.IntegerField()
-    loan_interest_rate = models.DecimalField(max_digits=5, decimal_places=5)
+    provider = models.CharField(max_length=256)
+    principal = models.DecimalField(max_digits=12, decimal_places=2)
+    terms = models.IntegerField()
+    interest_rate = models.DecimalField(max_digits=5, decimal_places=5)
+    start_date = models.DateTimeField(auto_now_add=True)
 
+    @property
     def interest_payment(self):
-        return self.loan_principal * self.loan_interest_rate / 12
+        return round(float(self.principal) * float(self.interest_rate) / 12.0, 2)
 
+    @property
     def periodic_period(self):
-        return math.round(self.loan_principal * (
-                    (self.loan_interest_rate / 12.0 * (1 + self.loan_interest_rate / 12.0) ** self.loan_terms) / (
-                    (1 + self.loan_interest_rate / 12.0) ** self.loan_terms - 1)), 2)
+        return round(self.principal * (
+                    (self.interest_rate / 12.0 * (1 + self.interest_rate / 12.0) ** self.terms) / (
+                    (1 + self.interest_rate / 12.0) ** self.terms - 1)), 2)
 
     def __str__(self):
-        return f"{self.id} - {self.loan_provider} - ${self.loan_terms}"
+        return f"{self.id} - {self.provider} - ${self.principal} - {self.terms} months"
+
+class Payment(models.Model):
+    loan = models.ForeignKey(Loan, on_delete=models.CASCADE, related_name='parent_loan')
+    Payment_type = models.CharField(max_length=256)
+    payment_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.id}"
+
+
+class Payment_Schedule(models.Model):
+    loan = models.ForeignKey(Loan, on_delete=models.CASCADE, related_name='parent_loan')
+    Payment_type = models.CharField(max_length=256)
+    payment_date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.id}"
