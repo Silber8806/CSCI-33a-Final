@@ -1,16 +1,17 @@
-import math
-
 from django.db import models
+from django.contrib.auth.models import User
 
 
 # Create your models here.
 
 class Loan(models.Model):
+    user_fk = models.ForeignKey(User,on_delete=models.CASCADE)
     provider = models.CharField(max_length=256)
     principal = models.DecimalField(max_digits=12, decimal_places=2)
     terms = models.IntegerField()
     interest_rate = models.DecimalField(max_digits=5, decimal_places=5)
     start_date = models.DateTimeField(auto_now_add=True)
+    end_date = models.DateTimeField(blank=True,null=True)
 
     @property
     def interest_payment(self):

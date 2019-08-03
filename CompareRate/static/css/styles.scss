@@ -12,7 +12,6 @@
     Took CSS From the previous project for userforms etc.
 */
 
-
 #user-form input[id^=id] {
     width: 100%;
 }
@@ -28,6 +27,9 @@
 }
 
 /*
-    Justify Base.html content
+    Justify handle fixed header...
 */
 
+body {
+    padding-top: 25px; /*70px nabar height*/
+}
