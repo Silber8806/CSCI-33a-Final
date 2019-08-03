@@ -18,7 +18,7 @@ class Loan(models.Model):
         return round(float(self.principal) * float(self.interest_rate) / 12.0, 2)
 
     @property
-    def periodic_period(self):
+    def monthly_payment(self):
         return round(self.principal * (
                 (self.interest_rate / 12.0 * (1 + self.interest_rate / 12.0) ** self.terms) / (
                 (1 + self.interest_rate / 12.0) ** self.terms - 1)), 2)
