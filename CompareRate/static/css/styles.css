@@ -1,0 +1,29 @@
+/*
+    Prevent issue with font awesome...
+*/
+.font-awesome {
+  font-family: "FontAwesome" !important;
+  font-style: normal;
+  margin: 5px; }
+
+/*
+    Took CSS From the previous project for userforms etc.
+*/
+#user-form input[id^=id] {
+  width: 100%; }
+
+.form-errors {
+  list-style-type: none;
+  color: red; }
+
+#action-options {
+  display: flex;
+  justify-content: space-between; }
+
+/*
+    Justify Base.html content
+*/
+navbar {
+  margin-bottom: 50px; }
+
+/*# sourceMappingURL=styles.css.map */

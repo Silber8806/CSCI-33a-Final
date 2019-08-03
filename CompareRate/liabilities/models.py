@@ -2,6 +2,7 @@ import math
 
 from django.db import models
 
+
 # Create your models here.
 
 class Loan(models.Model):
@@ -18,14 +19,15 @@ class Loan(models.Model):
     @property
     def periodic_period(self):
         return round(self.principal * (
-                    (self.interest_rate / 12.0 * (1 + self.interest_rate / 12.0) ** self.terms) / (
-                    (1 + self.interest_rate / 12.0) ** self.terms - 1)), 2)
+                (self.interest_rate / 12.0 * (1 + self.interest_rate / 12.0) ** self.terms) / (
+                (1 + self.interest_rate / 12.0) ** self.terms - 1)), 2)
 
     def __str__(self):
         return f"{self.id} - {self.provider} - ${self.principal} - {self.terms} months"
 
+
 class Payment(models.Model):
-    loan = models.ForeignKey(Loan, on_delete=models.CASCADE, related_name='parent_loan')
+    loan = models.ForeignKey(Loan, on_delete=models.CASCADE)
     Payment_type = models.CharField(max_length=256)
     payment_date = models.DateTimeField(auto_now_add=True)
 
@@ -34,7 +36,7 @@ class Payment(models.Model):
 
 
 class Payment_Schedule(models.Model):
-    loan = models.ForeignKey(Loan, on_delete=models.CASCADE, related_name='parent_loan')
+    loan = models.ForeignKey(Loan, on_delete=models.CASCADE)
     Payment_type = models.CharField(max_length=256)
     payment_date = models.DateTimeField(auto_now_add=True)
 
