@@ -2,16 +2,41 @@
 
 {% load static %}
 {% load humanize %}
+{% load crispy_forms_tags %}
 
 {% block title %} CompareRate - Accounts {% endblock %}
 
 {% block content %}
 <div class="container">
-    <h2>Loan: </h2>
-    <form method="POST" class="post-form">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="save btn btn-default">Save</button>
-    </form>
+    <div class="card rounded-0">
+        <div class="card-header">
+            <div class="dropdown show">
+                <a class="btn btn-secondary dropdown-toggle btn-lg" href="#" role="button" id="dropdownMenuLink"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Loans
+                </a>
+
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    {% for loan in loans %}
+                    <a class="dropdown-item" href="{% url 'detail' loan=loan.id %}">
+                        {{ loan.id }} - {{ loan.provider}} - ${{ loan.principal|floatformat:2|intcomma }}
+                    </a>
+                    {% endfor %}
+                    <a class="dropdown-item" href="{% url 'add_loan' %}">
+                        Add New Loan
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <form method="POST" class="post-form" class="bordered">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <div id="action-options">
+                    <button id="loan-save-btn" type="submit" class="save btn btn-success">Save Loan</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 {% endblock %}

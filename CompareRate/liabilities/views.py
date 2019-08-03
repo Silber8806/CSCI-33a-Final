@@ -35,5 +35,28 @@ def detail(request,loan):
             loan.save()
             return redirect('detail',loan=loan.pk)
     else:
+        loans = Loan.objects.filter(user_fk=request.user)
         form = LoanForm(instance=loan)
-    return render(request,'liabilities/details.html',{'form':form})
+        context = {
+            'form': form,
+            'loans': loans
+        }
+    return render(request,'liabilities/details.html',context)
+
+@login_required(login_url='/accounts/login')
+def add_loan(request):
+    if request.method == "POST":
+        form = LoanForm(request.POST)
+        if form.is_valid():
+            loan = form.save(commit=False)
+            loan.user_fk = request.user
+            loan.save()
+            return redirect('detail',loan=loan.pk)
+    else:
+        loans = Loan.objects.filter(user_fk=request.user)
+        form = LoanForm()
+        context = {
+            'form': form,
+            'loans': loans
+        }
+    return render(request,'liabilities/details.html',context)

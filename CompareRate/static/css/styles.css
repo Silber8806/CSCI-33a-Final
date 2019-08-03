@@ -27,4 +27,10 @@ body {
   padding-top: 100px;
   /*70px nabar height*/ }
 
+/*
+    update loan form
+*/
+#loan-save-btn {
+  margin-left: auto; }
+
 /*# sourceMappingURL=styles.css.map */
