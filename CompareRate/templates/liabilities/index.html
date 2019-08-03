@@ -6,97 +6,140 @@
 {% block title %} CompareRate - Accounts {% endblock %}
 
 {% block libraries %}
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
-    <script type="text/javascript" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-    <script src="{% static 'js/index.js' %}"></script>
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
+<script type="text/javascript"  src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="{% static 'js/index.js' %}"></script>
 {% endblock %}
 
 {% block content %}
+
+{% if loans %}
 <div class="container">
- <h3> Loans </h3>
- <table id="loans" class="table display table-striped table-hover table-responsive">
-    <thead>
+    <h3> Loans </h3>
+    <table id="loans" class="table display table-striped table-hover table-responsive">
+        <thead>
         <tr>
-            <th>ID </th>
+            <th>ID</th>
             <th>Provider</th>
             <th>Type</th>
             <th>Principal</th>
             <th>Terms</th>
             <th>Interest Rate</th>
-            <th> Start Date </th>
-            <th> options </th>
+            <th> Start Date</th>
+            <th> options</th>
         </tr>
-    </thead>
-    <tbody>
+        </thead>
+        <tbody>
         {% for loan in loans %}
-            <tr data="loan-{{ loan.id }}">
-                <td> {{ loan.id }}</td>
-                <td>{{ loan.provider }}</td>
-                <td>{{ loan.loan_type }}</td>
-                <td>${{ loan.principal|floatformat:2|intcomma }}</td>
-                <td>{{ loan.interest_rate_pct }}%</td>
-                <td>{{ loan.terms }} Months</td>
-                <td>{{ loan.start_date }}</td>
-                <td>
-                    <div class="btn-group">
-                      <button type="button" class="btn btn-primary">Details</button>
-                      <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span class="sr-only">Toggle Dropdown</span>
-                      </button>
-                      <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Edit</a>
-                        <a class="dropdown-item" href="#">Delete</a>
-                      </div>
-                    </div>
-                </td>
-             </tr>
+        <tr data="loan-{{ loan.id }}">
+            <td> {{ loan.id }}</td>
+            <td>{{ loan.provider }}</td>
+            <td>{{ loan.loan_type }}</td>
+            <td>${{ loan.principal|floatformat:2|intcomma }}</td>
+            <td>{{ loan.interest_rate_pct }}%</td>
+            <td>{{ loan.terms }} Months</td>
+            <td>{{ loan.start_date }}</td>
+            <td>
+                <div class="btn-group">
+                    <a href="{% url 'detail' loan=loan.id %}">
+                        <button type="button" class="btn btn-primary">Details</button>
+                    </a>
+                </div>
+                <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="#">Edit</a>
+                </div>
+            </td>
+        </tr>
         {% endfor %}
-    </tbody>
-    <tfoot>
+        </tbody>
+        <tfoot>
         <tr>
             <td></td>
             <td></td>
             <td></td>
-            <td>${{ total_principal.principal__sum|floatformat:2|intcomma  }}</td>
+            <td>${{ total_principal.principal__sum|floatformat:2|intcomma }}</td>
             <td>{{ average_interest }}%</td>
             <td></td>
             <td></td>
             <td></td>
         </tr>
-    </tfoot>
-</table>
+        </tfoot>
+    </table>
 
-<h3> Cashflow </h3>
- <table id="cashflow" class="table display table-striped table-hover table-responsive">
-    <thead>
+    <h3> Cashflow </h3>
+    <table id="cashflow" class="table display table-striped table-hover table-responsive">
+        <thead>
         <tr>
-            <th>ID </th>
+            <th>ID</th>
             <th>Provider</th>
             <th>Type</th>
             <th>Principal</th>
-            <th> Monthly Payment </th>
+            <th> Monthly Payment</th>
         </tr>
-    </thead>
-    <tbody>
+        </thead>
+        <tbody>
         {% for loan in loans %}
-            <tr data-id="{{ loan.id }}">
-                <td>{{ loan.id }}</td>
-                <td>{{ loan.provider }}</td>
-                <td>{{ loan.loan_type }}</td>
-                <td>${{ loan.principal|floatformat:2|intcomma }}</td>
-                <td>${{ loan.monthly_payment|floatformat:2|intcomma }}</td>
-             </tr>
+        <tr data-id="{{ loan.id }}">
+            <td>{{ loan.id }}</td>
+            <td>{{ loan.provider }}</td>
+            <td>{{ loan.loan_type }}</td>
+            <td>${{ loan.principal|floatformat:2|intcomma }}</td>
+            <td>${{ loan.monthly_payment|floatformat:2|intcomma }}</td>
+        </tr>
         {% endfor %}
-    </tbody>
-    <tfoot>
+        </tbody>
+        <tfoot>
         <tr>
             <td></td>
             <td></td>
             <td></td>
-            <td>${{ total_principal.principal__sum|floatformat:2|intcomma  }}</td>
+            <td>${{ total_principal.principal__sum|floatformat:2|intcomma }}</td>
             <td>${{ total_payments|floatformat:2|intcomma }}</td>
         </tr>
-    </tfoot>
-</table>
+        </tfoot>
+    </table>
+
+    <h3> Loan Cost </h3>
+    <table id="total-cost" class="table display table-striped table-hover table-responsive">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Provider</th>
+            <th>Type</th>
+            <th>Principal</th>
+            <th>Total Interest Paid </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for loan in loans %}
+        <tr data-id="{{ loan.id }}">
+            <td>{{ loan.id }}</td>
+            <td>{{ loan.provider }}</td>
+            <td>{{ loan.loan_type }}</td>
+            <td>${{ loan.principal|floatformat:2|intcomma }}</td>
+            <td>${{ loan.loan_cost|floatformat:2|intcomma }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>${{ total_principal.principal__sum|floatformat:2|intcomma }}</td>
+            <td>${{ total_cost|floatformat:2|intcomma }}</td>
+        </tr>
+        </tfoot>
+    </table>
 </div>
+
+{% else %}
+<div class="container">
+    <h1> You don't have any loans yet!  Please add one here!</h1>
+</div>
+{% endif %}
 {% endblock %}

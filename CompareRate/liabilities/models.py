@@ -5,28 +5,33 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class Loan(models.Model):
-    user_fk = models.ForeignKey(User,on_delete=models.CASCADE)
+    user_fk = models.ForeignKey(User, on_delete=models.CASCADE)
     provider = models.CharField(max_length=256)
     loan_type = models.CharField(max_length=256)
     principal = models.DecimalField(max_digits=12, decimal_places=2)
     terms = models.IntegerField()
     interest_rate = models.DecimalField(max_digits=5, decimal_places=5)
     start_date = models.DateField()
-    end_date = models.DateField(blank=True,null=True)
+    end_date = models.DateField(blank=True, null=True)
 
     @property
     def interest_rate_pct(self):
-        return round(100 * self.interest_rate,3)
+        return round(100 * self.interest_rate, 3)
 
     @property
-    def monthly_interest(self):
-        return round(float(self.principal) * float(self.interest_rate) / 12.0, 2)
+    def periodic_interest_rate(self):
+        return float(self.interest_rate) / 12.0
+
+    @property
+    def loan_cost(self):
+        return (int(self.terms) * (float(self.principal) * self.periodic_interest_rate) / (
+                1 - (1 + self.periodic_interest_rate) ** (-1 * int(self.terms)))) - float(self.principal)
 
     @property
     def monthly_payment(self):
-        return round(float(self.principal) * (
-                (float(self.interest_rate) / 12.0 * (1 + float(self.interest_rate) / 12.0) ** int(self.terms)) / (
-                (1 + float(self.interest_rate) / 12.0) ** int(self.terms) - 1)), 2)
+        return float(self.principal) * (
+                    self.periodic_interest_rate * (1 + self.periodic_interest_rate) ** int(self.terms)) / (
+                           (1 + self.periodic_interest_rate) ** int(self.terms) - 1)
 
     def __str__(self):
         return f"{self.id} - {self.provider} - ${self.principal} - {self.terms} months"

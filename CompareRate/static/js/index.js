@@ -10,4 +10,10 @@ $(document).ready( function () {
         searching: false,
         info: false
     });
+
+    $('#total-cost').DataTable({
+        paging: false,
+        searching: false,
+        info: false
+    })
 } );
