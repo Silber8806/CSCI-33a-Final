@@ -28,7 +28,7 @@
 <body>
 {% block navbar %}
 <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-primary">
-    <a class="navbar-brand" href="#">CompareRate</a>
+    <a class="navbar-brand" href="/">CompareRate</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02"
             aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -36,18 +36,28 @@
 
     <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-            <li class="nav-item">
+            {% if user.is_authenticated %}
+            <li class="nav-item active">
                 <a class="nav-link" href="{% url 'index' %}"> {{ user.username }} </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a class="nav-link" href="{% url 'logout' %}"> logout </a>
             </li>
+            {% else %}
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'login' %}"> Login/Register </a>
+            </li>
+            {% endif %}
         </ul>
     </div>
 </nav>
 {% endblock %}
 
-{% block content %}
+<div id="main">
+{% block content  %}
 {% endblock %}
+</div>
+
+
 </body>
 </html>
