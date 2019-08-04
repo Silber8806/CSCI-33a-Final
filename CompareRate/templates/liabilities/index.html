@@ -13,8 +13,18 @@
 
 {% block content %}
 
-{% if loans %}
+
+
 <div class="container">
+    {% if loans  %}
+        <h4> About CompareRate </h4>
+        <p> Add loans through the action button to see the total cost of your loan and the impact on cashflow! </p>
+    {% else %}
+        <h4> About CompareRate </h4>
+        <p> Add loans through the action button to see the total cost of your loan and the impact on cashflow! </p>
+        <h4><span class="badge badge-danger">Use Action button to add loans!</span></h4>
+        <br>
+    {% endif %}
     <div class="row">
         <h3 class="table-header"> Loans </h3>
         <div class="dropdown show">
@@ -79,6 +89,8 @@
         </tr>
         </tfoot>
     </table>
+
+    {% if loans %}
 
     <div class="row">
         <h3 class="table-header"> Cashflow </h3>
@@ -149,11 +161,6 @@
         </tr>
         </tfoot>
     </table>
-</div>
-
-{% else %}
-<div class="container">
-    <h1> You don't have any loans yet!  Please add one here!</h1>
 </div>
 {% endif %}
 {% endblock %}

@@ -4,7 +4,8 @@ from django.contrib import admin
 
 # customer tables
 from .models import (
-    Loan
+    Loan,
+    Payment
 )
 
 locale.setlocale( locale.LC_ALL, '' )
@@ -19,4 +20,8 @@ class LoanAdmin(admin.ModelAdmin):
     def principal_dollars(self,obj):
         return locale.currency(obj.principal, grouping=True)
 
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ('loan','installment','payment_date','principal_base','total_paid','is_active')
+    list_filter = ('loan','payment_date','is_active')
 admin.site.register(Loan, LoanAdmin)
+admin.site.register(Payment,PaymentAdmin)

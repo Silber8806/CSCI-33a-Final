@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from datetime import date, timedelta
+from dateutil.relativedelta import relativedelta
 
 # Create your models here.
 
@@ -34,22 +36,29 @@ class Loan(models.Model):
                            (1 + self.periodic_interest_rate) ** int(self.terms) - 1)
 
     def __str__(self):
-        return f"{self.id} - {self.provider} - ${self.principal} - {self.terms} months"
+        return f"{self.user_fk.username} - {self.provider} - ${self.principal} - {self.terms} months"
 
 
 class Payment(models.Model):
     loan = models.ForeignKey(Loan, on_delete=models.CASCADE)
-    Payment_type = models.CharField(max_length=256)
-    payment_date = models.DateTimeField(auto_now_add=True)
+    installment = models.IntegerField()
+    payment_type = models.CharField(max_length=256)
+    payment_date = models.DateField()
+    principal_base = models.DecimalField(max_digits=12, decimal_places=2)
+    principal_paid = models.DecimalField(max_digits=12, decimal_places=2)
+    addition_paid = models.DecimalField(max_digits=12, decimal_places=2)
+    interest_paid = models.DecimalField(max_digits=12, decimal_places=2)
+    total_paid = models.DecimalField(max_digits=12, decimal_places=2)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"{self.id}"
+        return f"{self.installment} - {self.loan}"
 
 
 class Payment_Schedule(models.Model):
     loan = models.ForeignKey(Loan, on_delete=models.CASCADE)
     Payment_type = models.CharField(max_length=256)
-    payment_date = models.DateTimeField(auto_now_add=True)
+    payment_date = models.DateTimeField()
 
     def __str__(self):
         return f"{self.id}"

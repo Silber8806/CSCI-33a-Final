@@ -7,6 +7,11 @@ from django.http import JsonResponse
 from .models import Loan
 from .forms import LoanForm
 
+from dateutil.relativedelta import relativedelta
+from django.db import transaction
+
+from .models import Payment
+
 # Create your views here.
 
 @login_required(login_url='/accounts/login/')
@@ -32,10 +37,29 @@ def detail(request,loan):
     if request.method == "POST":
         form = LoanForm(request.POST, instance=loan)
         if form.is_valid():
-            loan = form.save(commit=False)
-            loan.user_fk = request.user
-            loan.save()
-            return redirect('detail',loan=loan.pk)
+            with transaction.atomic():
+                loan = form.save(commit=False)
+                loan.user_fk = request.user
+                loan.end_date = loan.start_date + relativedelta(months=loan.terms)
+                loan.save()
+                Payment.objects.filter(loan=loan).delete()
+                balance=float(loan.principal)
+                for term_number in range(loan.terms):
+                    new_payment_interest = round(balance * float(loan.periodic_interest_rate), 2)
+                    new_payment = Payment(
+                            loan=loan,
+                            installment=term_number+1,
+                            payment_type='periodic',
+                            payment_date=loan.start_date + relativedelta(term_number),
+                            principal_base=balance,
+                            principal_paid=loan.monthly_payment - new_payment_interest,
+                            interest_paid=new_payment_interest,
+                            total_paid=loan.monthly_payment,
+                            addition_paid=0
+                            )
+                    balance = balance - (loan.monthly_payment - new_payment_interest)
+                    new_payment.save()
+                return redirect('detail',loan=loan.pk)
     else:
         loans = Loan.objects.filter(user_fk=request.user)
         form = LoanForm(instance=loan)
@@ -51,9 +75,28 @@ def add_loan(request):
     if request.method == "POST":
         form = LoanForm(request.POST)
         if form.is_valid():
-            loan = form.save(commit=False)
-            loan.user_fk = request.user
-            loan.save()
+            with transaction.atomic():
+                loan = form.save(commit=False)
+                loan.user_fk = request.user
+                loan.end_date = loan.start_date + relativedelta(months=loan.terms)
+                print(loan.end_date)
+                loan.save()
+                balance=float(loan.principal)
+                for term_number in range(loan.terms):
+                    new_payment_interest = round(balance * float(loan.periodic_interest_rate), 2)
+                    new_payment = Payment(
+                            loan=loan,
+                            installment=term_number+1,
+                            payment_type='periodic',
+                            payment_date=(loan.start_date + relativedelta(months=term_number)),
+                            principal_base=balance,
+                            principal_paid=loan.monthly_payment - new_payment_interest,
+                            interest_paid=new_payment_interest,
+                            total_paid=loan.monthly_payment,
+                            addition_paid=0
+                            )
+                    balance = balance - (loan.monthly_payment - new_payment_interest)
+                    new_payment.save()
             return redirect('detail',loan=loan.pk)
     else:
         loans = Loan.objects.filter(user_fk=request.user)
@@ -68,6 +111,8 @@ def add_loan(request):
 def delete_loan(request):
     if request.method == "DELETE":
         loan_to_delete = QueryDict(request.body).get('loan')
-        Loan.objects.get(pk=loan_to_delete).delete()
-        payload = {'success': True}
-        return JsonResponse(payload)
+        with transaction.atomic():
+            Payment.objects.filter(loan=loan_to_delete).delete()
+            Loan.objects.get(pk=loan_to_delete).delete()
+            payload = {'success': True}
+            return JsonResponse(payload)
