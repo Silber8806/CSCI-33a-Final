@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, F
+from django.http import QueryDict
+from django.http import JsonResponse
 
 from .models import Loan
 from .forms import LoanForm
@@ -39,7 +41,8 @@ def detail(request,loan):
         form = LoanForm(instance=loan)
         context = {
             'form': form,
-            'loans': loans
+            'loans': loans,
+            'active_loan': loan,
         }
     return render(request,'liabilities/details.html',context)
 
@@ -60,3 +63,11 @@ def add_loan(request):
             'loans': loans
         }
     return render(request,'liabilities/details.html',context)
+
+@login_required(login_url='/accounts/login')
+def delete_loan(request):
+    if request.method == "DELETE":
+        loan_to_delete = QueryDict(request.body).get('loan')
+        Loan.objects.get(pk=loan_to_delete).delete()
+        payload = {'success': True}
+        return JsonResponse(payload)

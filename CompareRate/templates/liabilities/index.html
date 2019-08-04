@@ -15,7 +15,19 @@
 
 {% if loans %}
 <div class="container">
-    <h3> Loans </h3>
+    <div class="row">
+        <h3 class="table-header"> Loans </h3>
+        <div class="dropdown show">
+          <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Actions
+          </a>
+
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="{% url 'add_loan' %}">Add Loan</a>
+          </div>
+        </div>
+    </div>
+
     <table id="loans" class="table display table-striped table-hover table-responsive">
         <thead>
         <tr>
@@ -40,18 +52,15 @@
             <td>{{ loan.terms }} Months</td>
             <td>{{ loan.start_date }}</td>
             <td>
-                <div class="btn-group">
-                    <a href="#">
-                        <button type="button" class="btn btn-primary">Details</button>
-                    </a>
-                </div>
-                <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split"
-                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="sr-only">Toggle Dropdown</span>
-                </button>
-                <div class="dropdown-menu">
-                    <a class="dropdown-item" href="{% url 'detail' loan=loan.id %}">Edit</a>
-                    <a class="dropdown-item" href="{% url 'detail' loan=loan.id %}">Delete</a>
+                <div class="dropdown show">
+                  <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Actions
+                  </a>
+
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <a class="dropdown-item" href="{% url 'detail' loan=loan.id %}">Edit</a>
+                            <a class="dropdown-item delete-item" data-id="{{ loan.id }}" href="#">Delete</a>
+                  </div>
                 </div>
             </td>
         </tr>
@@ -71,7 +80,9 @@
         </tfoot>
     </table>
 
-    <h3> Cashflow </h3>
+    <div class="row">
+        <h3 class="table-header"> Cashflow </h3>
+    </div>
     <table id="cashflow" class="table display table-striped table-hover table-responsive">
         <thead>
         <tr>
@@ -104,7 +115,9 @@
         </tfoot>
     </table>
 
-    <h3> Loan Cost </h3>
+    <div class="row">
+        <h3 class="table-header"> Loan Cost </h3>
+    </div>
     <table id="total-cost" class="table display table-striped table-hover table-responsive">
         <thead>
         <tr>

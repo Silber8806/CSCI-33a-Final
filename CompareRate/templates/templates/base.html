@@ -38,7 +38,10 @@
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
             {% if user.is_authenticated %}
             <li class="nav-item active">
-                <a class="nav-link" href="{% url 'index' %}"> {{ user.username }} </a>
+                <a class="nav-link" href="#"> {{ user.username }} </a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" href="{% url 'index' %}"> Overview </a>
             </li>
             <li class="nav-item active">
                 <a class="nav-link" href="{% url 'logout' %}"> logout </a>

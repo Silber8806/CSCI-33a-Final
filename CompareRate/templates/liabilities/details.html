@@ -15,7 +15,6 @@
                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Loans
                 </a>
-
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                     {% for loan in loans %}
                     <a class="dropdown-item" href="{% url 'detail' loan=loan.id %}">
@@ -27,12 +26,18 @@
                     </a>
                 </div>
             </div>
+            {% if active_loan %}
+                <div id="detail-loan-active">
+                    Current Loan: {{ active_loan.id }} - {{ active_loan.provider}} - ${{ active_loan.principal|floatformat:2|intcomma }}
+                </div>
+            {% endif %}
         </div>
         <div class="card-body">
             <form method="POST" class="post-form" class="bordered">
                 {% csrf_token %}
                 {{ form|crispy }}
                 <div id="action-options">
+                    <a href="{% url 'index' %}"><button id="cancel-btn" class="save btn btn-danger">Cancel</button></a>
                     <button id="loan-save-btn" type="submit" class="save btn btn-success">Save Loan</button>
                 </div>
             </form>
