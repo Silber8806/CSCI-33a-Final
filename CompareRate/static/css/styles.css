@@ -46,4 +46,7 @@ body {
 .payment_schedule {
   margin-bottom: 25px; }
 
+.paid-off {
+  color: grey; }
+
 /*# sourceMappingURL=styles.css.map */

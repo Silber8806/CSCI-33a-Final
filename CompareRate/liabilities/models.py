@@ -1,10 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 from datetime import date
 from django.db.models import Sum, F
 
 # Create your models here.
+
+class NoResult(object):
+    pass
 
 class Loan_Type(models.Model):
     name = models.CharField(max_length=256)
@@ -17,7 +21,10 @@ class Loan(models.Model):
     provider = models.CharField(max_length=256)
     loan_type = models.ForeignKey(Loan_Type,on_delete=models.DO_NOTHING)
     principal = models.DecimalField(max_digits=12, decimal_places=2)
-    terms = models.IntegerField()
+    terms = models.IntegerField(validators=[
+        MaxValueValidator(1000),
+        MinValueValidator(6)
+    ])
     interest_rate = models.DecimalField(max_digits=5, decimal_places=5)
     start_date = models.DateField()
     end_date = models.DateField()
@@ -25,6 +32,14 @@ class Loan(models.Model):
 
     def _get_latest_payment(self):
         return Payment.objects.filter(loan=self).filter(payment_date__gt=date.today()).order_by('installment').first()
+
+    @property
+    def is_paid_off(self):
+        last_payment = self._get_latest_payment()
+        if last_payment is None:
+            return True
+        else:
+            return False
 
     @property
     def interest_rate_pct(self):
@@ -48,15 +63,23 @@ class Loan(models.Model):
     @property
     def last_principal_payment(self):
         last_payment = self._get_latest_payment()
+        if last_payment is None:
+            return 0
         return last_payment.principal_paid + last_payment.addition_paid
 
     @property
     def last_interest_payment(self):
-        return self._get_latest_payment().interest_paid
+        last_payment = self._get_latest_payment()
+        if last_payment is None:
+            return 0
+        return last_payment.interest_paid
 
     @property
     def current_principal(self):
-        return self._get_latest_payment().principal_base
+        last_payment = self._get_latest_payment()
+        if last_payment is None:
+            return 0
+        return last_payment.principal_base
 
     def __str__(self):
         return f"{self.user_fk.username} - {self.provider} - ${self.principal} - {self.terms} months"

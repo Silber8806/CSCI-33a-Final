@@ -6,6 +6,14 @@
 
 {% block title %} CompareRate - Details {% endblock %}
 
+{% block libraries %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.css"
+      integrity="sha256-b88RdwbRJEzRx95nCuuva+hO5ExvXXnpX+78h8DjyOE=" crossorigin="anonymous"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.min.js"
+        integrity="sha256-/7FLTdzP6CfC1VBAj/rsp3Rinuuu9leMRGd354hvk0k=" crossorigin="anonymous"></script>
+<script src="{% static 'js/details.js' %}"></script>
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="card rounded-0">
@@ -27,9 +35,9 @@
                 </div>
             </div>
             {% if active_loan %}
-                <div id="detail-loan-active">
-                    Current Loan: {{ active_loan.id }} - {{ active_loan.provider}} - ${{ active_loan.principal|floatformat:2|intcomma }}
-                </div>
+            <div id="detail-loan-active">
+                Current Loan: {{ active_loan.id }} - {{ active_loan.provider}} - ${{ active_loan.principal|floatformat:2|intcomma }}
+            </div>
             {% endif %}
         </div>
         <div class="card-body">
@@ -37,7 +45,9 @@
                 {% csrf_token %}
                 {{ form|crispy }}
                 <div id="action-options">
-                    <a href="{% url 'index' %}"><button id="cancel-btn" class="save btn btn-danger">Cancel</button></a>
+                    <a href="{% url 'index' %}">
+                        <button id="cancel-btn" class="save btn btn-danger">Cancel</button>
+                    </a>
                     <button id="loan-save-btn" type="submit" class="save btn btn-success">Save Loan</button>
                 </div>
             </form>

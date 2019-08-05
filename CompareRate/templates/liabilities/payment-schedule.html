@@ -1,6 +1,7 @@
 {% extends 'templates/base.html' %}
 
 {% load static %}
+{% load humanize %}
 
 {% block title %} CompareRate - Amortization Schedule {% endblock %}
 
@@ -40,11 +41,11 @@
                 <td> {{ payment.installment }}</td>
                 <td> {{ payment.payment_type }}</td>
                 <td> {{ payment.payment_date }}</td>
-                <td> ${{ payment.principal_base }}</td>
-                <td> ${{ payment.principal_paid }}</td>
-                <td> ${{ payment.addition_paid }}</td>
-                <td> ${{ payment.interest_paid }}</td>
-                <td> ${{ payment.total_paid }}</td>
+                <td> ${{ payment.principal_base|floatformat:2|intcomma  }}</td>
+                <td> ${{ payment.principal_paid|floatformat:2|intcomma  }}</td>
+                <td> ${{ payment.addition_paid|floatformat:2|intcomma  }}</td>
+                <td> ${{ payment.interest_paid|floatformat:2|intcomma  }}</td>
+                <td> ${{ payment.total_paid|floatformat:2|intcomma  }}</td>
             </tr>
             {% endif %}
             {% endfor %}

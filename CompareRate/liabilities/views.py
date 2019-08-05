@@ -4,6 +4,7 @@ from django.db.models import Sum, F
 from django.db import transaction
 from django.http import QueryDict, JsonResponse
 from dateutil.relativedelta import relativedelta
+from django.contrib import messages
 
 from .models import Loan, Payment
 from .forms import LoanForm
@@ -72,22 +73,28 @@ def detail(request, loan):
                     )
                     balance = balance - (loan.monthly_payment - new_payment_interest)
                     new_payment.save()
+                if (is_new_loan):
+                    messages.success(request, f"Created new loan:{loan.id} - {loan.provider} - ${loan.principal}")
+                else:
+                    messages.success(request, f"Updated new loan:{loan.id} - {loan.provider} - ${loan.principal}")
                 return redirect('detail', loan=loan.pk)
     else:
-        loans = Loan.objects.filter(user_fk=request.user)
         if (is_new_loan):
             form = LoanForm()
-            context = {
-                'form': form,
-                'loans': loans
-            }
         else:
             form = LoanForm(instance=loan)
-            context = {
-                'form': form,
-                'loans': loans,
-                'active_loan': loan,
-            }
+    loans = Loan.objects.filter(user_fk=request.user)
+    if (is_new_loan):
+        context = {
+            'form': form,
+            'loans': loans
+        }
+    else:
+        context = {
+            'form': form,
+            'loans': loans,
+            'active_loan': loan,
+        }
     return render(request, 'liabilities/details.html', context)
 
 
@@ -104,6 +111,7 @@ def delete_loan(request):
             Payment.objects.filter(loan=loan_to_delete).delete()
             Loan.objects.get(pk=loan_to_delete).delete()
             payload = {'success': True}
+            messages.error(request,f"deleted loan: {loan_to_delete}")
             return JsonResponse(payload)
 
 @login_required(login_url='/accounts/login')
