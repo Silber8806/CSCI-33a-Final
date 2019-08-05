@@ -63,7 +63,7 @@ class Loan(models.Model):
 
 
 class Payment(models.Model):
-    loan = models.ForeignKey(Loan, on_delete=models.CASCADE)
+    loan = models.ForeignKey(Loan, on_delete=models.CASCADE,related_name='payments')
     installment = models.IntegerField()
     payment_type = models.CharField(max_length=256)
     payment_date = models.DateField()

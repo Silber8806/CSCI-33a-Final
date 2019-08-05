@@ -112,7 +112,7 @@ def payment_schedule(request, loan):
         loan = get_object_or_404(Loan, pk=loan)
         payments = Payment.objects.filter(loan=loan).all().order_by('installment')
     else:
-        payments = Payment.objects.all().order_by('loan__id','installment')
+        payments = Payment.objects.filter(loan__user_fk=request.user).all().order_by('loan__id','installment')
 
     context = {
         "schedule": payments,
