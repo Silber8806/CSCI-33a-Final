@@ -105,3 +105,16 @@ def delete_loan(request):
             Loan.objects.get(pk=loan_to_delete).delete()
             payload = {'success': True}
             return JsonResponse(payload)
+
+@login_required(login_url='/accounts/login')
+def payment_schedule(request, loan):
+    if loan != 0:
+        loan = get_object_or_404(Loan, pk=loan)
+        payments = Payment.objects.filter(loan=loan).all().order_by('installment')
+    else:
+        payments = Payment.objects.all().order_by('loan__id','installment')
+
+    context = {
+        "schedule": payments,
+    }
+    return render(request, 'liabilities/payment-schedule.html', context)

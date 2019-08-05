@@ -7,34 +7,34 @@
 
 {% block libraries %}
 <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
-<script type="text/javascript"  src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
 <script src="{% static 'js/index.js' %}"></script>
 {% endblock %}
 
 {% block content %}
 
 
-
 <div class="container">
-    {% if loans  %}
-        <h4> About CompareRate </h4>
-        <p> Add loans through the action button to see the total cost of your loan and the impact on cashflow! </p>
+    {% if loans %}
+    <h4> About CompareRate </h4>
+    <p> Add loans through the action button to see the total cost of your loan and the impact on cashflow! </p>
     {% else %}
-        <h4> About CompareRate </h4>
-        <p> Add loans through the action button to see the total cost of your loan and the impact on cashflow! </p>
-        <h4><span class="badge badge-danger">Use Action button to add loans!</span></h4>
-        <br>
+    <h4> About CompareRate </h4>
+    <p> Add loans through the action button to see the total cost of your loan and the impact on cashflow! </p>
+    <h4><span class="badge badge-danger">Use Action button to add loans!</span></h4>
+    <br>
     {% endif %}
     <div class="row">
         <h3 class="table-header"> Loans </h3>
         <div class="dropdown show">
-          <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Actions
-          </a>
+            <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Actions
+            </a>
 
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <a class="dropdown-item" href="{% url 'add_loan' %}">Add Loan</a>
-          </div>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <a class="dropdown-item" href="{% url 'add_loan' %}">Add Loan</a>
+            </div>
         </div>
     </div>
 
@@ -49,8 +49,8 @@
             <th>Terms</th>
             <th>Interest Rate</th>
             <th> Start Date</th>
-            <th> End Date </th>
-            <th> options</th>
+            <th> End Date</th>
+            <th> Actions </th>
         </tr>
         </thead>
         <tbody>
@@ -60,21 +60,22 @@
             <td>{{ loan.provider }}</td>
             <td>{{ loan.loan_type }}</td>
             <td>${{ loan.principal|floatformat:2|intcomma }}</td>
-            <td>${{ loan.current_principal|floatformat:2|intcomma }} </td>
+            <td>${{ loan.current_principal|floatformat:2|intcomma }}</td>
             <td>{{ loan.interest_rate_pct }}%</td>
             <td>{{ loan.terms }} Months</td>
             <td>{{ loan.start_date }}</td>
             <td>{{ loan.end_date }}</td>
             <td>
                 <div class="dropdown show">
-                  <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Actions
-                  </a>
+                    <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Actions
+                    </a>
 
-                  <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            <a class="dropdown-item" href="{% url 'detail' loan=loan.id %}">Edit</a>
-                            <a class="dropdown-item delete-item" data-id="{{ loan.id }}" href="#">Delete</a>
-                  </div>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <a class="dropdown-item" href="{% url 'detail' loan=loan.id %}">Edit</a>
+                        <a class="dropdown-item delete-item" data-id="{{ loan.id }}" href="#">Delete</a>
+                    </div>
                 </div>
             </td>
         </tr>
@@ -100,6 +101,16 @@
 
     <div class="row">
         <h3 class="table-header"> Cashflow </h3>
+        <div class="dropdown show">
+            <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Actions
+            </a>
+
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <a class="dropdown-item" href="{% url 'payment_schedule' loan=0 %}">All Payment Schedules</a>
+            </div>
+        </div>
     </div>
     <table id="cashflow" class="table display table-striped table-hover table-responsive">
         <thead>
@@ -108,8 +119,9 @@
             <th>Provider</th>
             <th>Type</th>
             <th> Monthly Payment</th>
-            <th> Last Principal Paid </th>
-            <th> Last Interest Paid </th>
+            <th> Last Principal Paid</th>
+            <th> Last Interest Paid</th>
+            <th> Actions </th>
         </tr>
         </thead>
         <tbody>
@@ -121,6 +133,18 @@
             <td>${{ loan.monthly_payment|floatformat:2|intcomma }}</td>
             <td>${{ loan.last_principal_payment }}</td>
             <td>${{ loan.last_interest_payment }}</td>
+            <td>
+                <div class="dropdown show">
+                    <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Actions
+                    </a>
+
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <a class="dropdown-item" href="{% url 'payment_schedule' loan=loan.id %}">Payment Schedule</a>
+                    </div>
+                </div>
+            </td>
         </tr>
         {% endfor %}
         </tbody>
@@ -146,7 +170,7 @@
             <th>Provider</th>
             <th>Type</th>
             <th>Principal</th>
-            <th>Total Interest Paid </th>
+            <th>Total Interest Paid</th>
         </tr>
         </thead>
         <tbody>

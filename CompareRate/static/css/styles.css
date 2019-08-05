@@ -40,4 +40,10 @@ body {
 #detail-loan-active {
   margin-top: 20px; }
 
+/*
+    Schedule of payments
+*/
+.payment_schedule {
+  margin-bottom: 25px; }
+
 /*# sourceMappingURL=styles.css.map */
