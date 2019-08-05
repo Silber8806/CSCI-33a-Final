@@ -45,9 +45,11 @@
             <th>Provider</th>
             <th>Type</th>
             <th>Principal</th>
+            <th>Principal Left</th>
             <th>Terms</th>
             <th>Interest Rate</th>
             <th> Start Date</th>
+            <th> End Date </th>
             <th> options</th>
         </tr>
         </thead>
@@ -58,9 +60,11 @@
             <td>{{ loan.provider }}</td>
             <td>{{ loan.loan_type }}</td>
             <td>${{ loan.principal|floatformat:2|intcomma }}</td>
+            <td>${{ loan.current_principal|floatformat:2|intcomma }} </td>
             <td>{{ loan.interest_rate_pct }}%</td>
             <td>{{ loan.terms }} Months</td>
             <td>{{ loan.start_date }}</td>
+            <td>{{ loan.end_date }}</td>
             <td>
                 <div class="dropdown show">
                   <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -82,7 +86,9 @@
             <td></td>
             <td></td>
             <td>${{ total_principal.principal__sum|floatformat:2|intcomma }}</td>
+            <td>${{ total_principal_left|floatformat:2|intcomma }}</td>
             <td>{{ average_interest }}%</td>
+            <td></td>
             <td></td>
             <td></td>
             <td></td>
@@ -101,8 +107,9 @@
             <th>ID</th>
             <th>Provider</th>
             <th>Type</th>
-            <th>Principal</th>
             <th> Monthly Payment</th>
+            <th> Last Principal Paid </th>
+            <th> Last Interest Paid </th>
         </tr>
         </thead>
         <tbody>
@@ -111,8 +118,9 @@
             <td>{{ loan.id }}</td>
             <td>{{ loan.provider }}</td>
             <td>{{ loan.loan_type }}</td>
-            <td>${{ loan.principal|floatformat:2|intcomma }}</td>
             <td>${{ loan.monthly_payment|floatformat:2|intcomma }}</td>
+            <td>${{ loan.last_principal_payment }}</td>
+            <td>${{ loan.last_interest_payment }}</td>
         </tr>
         {% endfor %}
         </tbody>
@@ -122,7 +130,8 @@
             <td></td>
             <td></td>
             <td>${{ total_principal.principal__sum|floatformat:2|intcomma }}</td>
-            <td>${{ total_payments|floatformat:2|intcomma }}</td>
+            <td>${{ last_principal_paid_total }}</td>
+            <td>${{ last_interest_paid_total }}</td>
         </tr>
         </tfoot>
     </table>

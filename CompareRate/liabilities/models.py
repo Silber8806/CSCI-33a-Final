@@ -1,20 +1,30 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from datetime import date, timedelta
-from dateutil.relativedelta import relativedelta
+from datetime import date
+from django.db.models import Sum, F
 
 # Create your models here.
+
+class Loan_Type(models.Model):
+    name = models.CharField(max_length=256)
+
+    def __str__(self):
+        return f"{self.name}"
 
 class Loan(models.Model):
     user_fk = models.ForeignKey(User, on_delete=models.CASCADE)
     provider = models.CharField(max_length=256)
-    loan_type = models.CharField(max_length=256)
+    loan_type = models.ForeignKey(Loan_Type,on_delete=models.DO_NOTHING)
     principal = models.DecimalField(max_digits=12, decimal_places=2)
     terms = models.IntegerField()
     interest_rate = models.DecimalField(max_digits=5, decimal_places=5)
     start_date = models.DateField()
-    end_date = models.DateField(blank=True, null=True)
+    end_date = models.DateField()
+    status = models.CharField(max_length=256, default="active")
+
+    def _get_latest_payment(self):
+        return Payment.objects.filter(loan=self).filter(payment_date__gt=date.today()).order_by('installment').first()
 
     @property
     def interest_rate_pct(self):
@@ -35,6 +45,19 @@ class Loan(models.Model):
                     self.periodic_interest_rate * (1 + self.periodic_interest_rate) ** int(self.terms)) / (
                            (1 + self.periodic_interest_rate) ** int(self.terms) - 1)
 
+    @property
+    def last_principal_payment(self):
+        last_payment = self._get_latest_payment()
+        return last_payment.principal_paid + last_payment.addition_paid
+
+    @property
+    def last_interest_payment(self):
+        return self._get_latest_payment().interest_paid
+
+    @property
+    def current_principal(self):
+        return self._get_latest_payment().principal_base
+
     def __str__(self):
         return f"{self.user_fk.username} - {self.provider} - ${self.principal} - {self.terms} months"
 
@@ -53,12 +76,3 @@ class Payment(models.Model):
 
     def __str__(self):
         return f"{self.installment} - {self.loan}"
-
-
-class Payment_Schedule(models.Model):
-    loan = models.ForeignKey(Loan, on_delete=models.CASCADE)
-    Payment_type = models.CharField(max_length=256)
-    payment_date = models.DateTimeField()
-
-    def __str__(self):
-        return f"{self.id}"
