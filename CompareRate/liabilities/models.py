@@ -20,7 +20,9 @@ class Loan(models.Model):
     user_fk = models.ForeignKey(User, on_delete=models.CASCADE)
     provider = models.CharField(max_length=256)
     loan_type = models.ForeignKey(Loan_Type,on_delete=models.DO_NOTHING)
-    principal = models.DecimalField(max_digits=12, decimal_places=2)
+    principal = models.DecimalField(max_digits=12, decimal_places=2,validators=[
+        MinValueValidator(100)
+    ])
     terms = models.IntegerField(validators=[
         MaxValueValidator(1000),
         MinValueValidator(6)
