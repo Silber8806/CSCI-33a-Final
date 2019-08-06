@@ -2,6 +2,7 @@
 cat city_of_cambridge.csv | tail -n+2 | awk -F ',' '{print $1","$2","$3" "$4", Cambridge, Ma, "$10}' > cambridge_ma.csv
 
 #use SQLite Browser client to load data into a table called cambridge_ma_stage using import table from CSV button (or importer)
+#addresses found here...http://results.openaddresses.io/
 
 # run the following in SQLite Browser client:
 insert into houses_zipcodes(
