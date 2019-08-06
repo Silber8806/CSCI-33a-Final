@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # customer tables
 from .models import (
-    ZipCodes
+    Address
 )
 
-admin.site.register(ZipCodes)
+admin.site.register(Address)
