@@ -1,3 +1,0 @@
-
-# from the openaddresses database...just cambridge data...
-cat city_of_cambridge.csv | tail -n+2 | awk -F ',' '{print $1","$2","$3" "$4", Cambridge, Ma, "$10}' > cambridge_ma.csv
