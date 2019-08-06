@@ -1,5 +1,5 @@
 # download open addresses database...find CSV file for a city (we use cambridge here) and run bash like the below:
-cat city_of_cambridge.csv | tail -n+2 | awk -F ',' '{print $1","$2","$3" "$4", Cambridge, Ma, "$10}' > cambridge_ma.csv
+cat city_of_cambridge.csv | tail -n+2 | awk -F ',' '{print $1","$2","$3" "$4", Cambridge, Ma"}' > cambridge_ma.csv
 
 #use SQLite Browser client to load data into a table called cambridge_ma_stage using import table from CSV button (or importer)
 #addresses found here...http://results.openaddresses.io/

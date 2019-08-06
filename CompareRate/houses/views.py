@@ -20,7 +20,7 @@ def zipcode(request):
         results = []
     else:
         results = Address.objects.filter(
-            Q(street__icontains=search_term) | Q(city__icontains=search_term) | Q(zipcode__icontains=search_term))
+            Q(street__icontains=search_term) | Q(city__icontains=search_term))
 
     context = {
         "form": form,

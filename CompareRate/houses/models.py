@@ -7,10 +7,9 @@ class Address(models.Model):
     street = models.CharField(max_length=512)
     city = models.CharField(max_length=256)
     state = models.CharField(max_length=2)
-    zipcode = models.IntegerField()
 
     class Meta:
         verbose_name_plural = "addresses"
 
     def __str__(self):
-        return f"{self.street}, {self.city}, {self.state} {self.zipcode}"
+        return f"{self.street}, {self.city}, {self.state}"
