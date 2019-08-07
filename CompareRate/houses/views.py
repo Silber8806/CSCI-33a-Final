@@ -42,12 +42,16 @@ def zipcode(request):
 # clean lxml data...
 def clean_data(data):
     if data is not None:
-        return data.text
+        if hasattr(data,'text'):
+            if (data.text is not None):
+                return data.text
     return NOT_AVAIL_ERR
 
 def clean_integer(data):
     if data is not None:
-        return int(data.text)
+        if hasattr(data,'text'):
+            if (data.text is not None):
+                return int(data.text)
     return NOT_AVAIL_ERR
 
 def get_property_data(zpid, house):
@@ -97,6 +101,12 @@ def house(request, house_id):
                     house['zpid'] = result.find('zpid').text
                 except:
                     return HttpResponseServerError("No Zillow Property key found...")
+                zillow_estimate = clean_integer(result.find('zestimate/amount'))
+                if zillow_estimate == "Not Available":
+                    continue
+                house['estimate'] = zillow_estimate
+                house['estimate_range_low'] = clean_integer(result.find('zestimate/valuationRange/low'))
+                house['estimate_range_high'] = clean_integer(result.find('zestimate/valuationRange/high'))
                 house['homedetail_url'] = clean_data(result.find('links/homedetails'))
                 house['comparable_url'] = clean_data(result.find('links/comparables'))
                 try:
@@ -105,9 +115,6 @@ def house(request, house_id):
                         'address/zipcode').text
                 except:
                     return HttpResponseServerError("No Zillow Address Found")
-                house['estimate'] = clean_integer(result.find('zestimate/amount'))
-                house['estimate_range_low'] = clean_integer(result.find('zestimate/valuationRange/low'))
-                house['estimate_range_high'] = clean_integer(result.find('zestimate/valuationRange/high'))
                 house = get_property_data(house['zpid'], house)
                 house_json = json.loads(json.dumps(house, indent=4, sort_keys=True))
                 search_results.append(house_json)

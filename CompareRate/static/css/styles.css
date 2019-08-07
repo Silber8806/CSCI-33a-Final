@@ -47,6 +47,20 @@ body {
   margin-bottom: 25px; }
 
 .paid-off {
-  color: grey; }
+  color: red; }
+
+/*
+    House Search Carousel
+*/
+.card {
+  margin: 25px 0px; }
+
+.carousel {
+  padding: 10px;
+  max-width: 50%;
+  margin: 0 auto; }
+
+.card-body h2 {
+  text-align: center; }
 
 /*# sourceMappingURL=styles.css.map */
