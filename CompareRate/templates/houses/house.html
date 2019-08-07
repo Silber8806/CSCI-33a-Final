@@ -1,13 +1,47 @@
 {% extends 'templates/base.html' %}
 
 {% load static %}
+{% load humanize %}
 
-{% block title %} House Search Page! {% endblock %}
+{% block title %} CompareRate - House {% endblock %}
 
 {% block libraries %}
 {% endblock %}
 
 
 {% block content %}
-<h1> This is a House! </h1>
+<div class="container">
+    {% for house in houses %}
+    <div class="card">
+        {{ house.images }}
+        <div class="card-body">
+            <h5 class="card-title">{{ house.address }}</h5>
+            <p class="card-text"> {{ house.description }}</p>
+        </div>
+        <ul class="list-group list-group-flush">
+            <a href="{{ house.homedetail_url }}">
+                <li class="list-group-item">Home Details</li>
+            </a>
+            <a href="{{ house.comparable_url }}">
+                <li class="list-group-item">Comparable Houses</li>
+            </a>
+        </ul>
+        {% if house.details %}
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Type: {{ house.type }}</li>
+            <li class="list-group-item">Bedrooms: {{ house.bedrooms }}</li>
+            <li class="list-group-item">Bathrooms: {{ house.bathrooms }}</li>
+            <li class="list-group-item">Rooms: {{ house.rooms }}</li>
+            <li class="list-group-item">Sqft: {{ house.sqft }}</li>
+            <li class="list-group-item">Year: {{ house.year }}</li>
+        </ul>
+        {% endif %}
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">Low Estimate: ${{ house.estimate_range_low|floatformat:2|intcomma }}</li>
+            <li class="list-group-item">Low Estimate: ${{ house.estimate|floatformat:2|intcomma }}</li>
+            <li class="list-group-item">Low Estimate: ${{ house.estimate_range_high|floatformat:2|intcomma }}</li>
+        </ul>
+    </div>
+    {% endfor %}
+</div>
 {% endblock %}
