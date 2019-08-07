@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, F
@@ -6,7 +8,7 @@ from django.http import QueryDict, JsonResponse
 from dateutil.relativedelta import relativedelta
 from django.contrib import messages
 
-from .models import Loan, Payment
+from .models import Loan, Payment, Loan_Type
 from .forms import LoanForm
 
 
@@ -17,6 +19,7 @@ def index(request):
     current_loans = Loan.objects.filter(user_fk=request.user.id)
     principal_total = current_loans.aggregate(Sum('principal'))
     principal_current_total = sum([loan.current_principal for loan in current_loans])
+    monthly_payment_total = sum([loan.monthly_payment for loan in current_loans])
     last_principal_paid_total = sum([loan.last_principal_payment for loan in current_loans])
     last_interest_paid_total = sum([loan.last_interest_payment for loan in current_loans])
     total_cost = sum([loan.loan_cost for loan in current_loans])
@@ -28,6 +31,7 @@ def index(request):
         "loans": current_loans,
         "total_principal": principal_total,
         "total_principal_left": principal_current_total,
+        "total_monthly_payments":monthly_payment_total,
         "last_principal_paid_total":last_principal_paid_total,
         "last_interest_paid_total":last_interest_paid_total,
         "average_interest": average_interest,
@@ -97,6 +101,22 @@ def detail(request, loan):
         }
     return render(request, 'liabilities/details.html', context)
 
+@login_required(login_url='/accounts/login')
+def add_mortgage(request,house_name,loan_amount):
+    loans = Loan.objects.filter(user_fk=request.user)
+    form = LoanForm(initial={
+        'provider': house_name,
+        'loan_type': Loan_Type.objects.filter(name='Mortgage').first(),
+        'principal': int(loan_amount),
+        'terms': 360,
+        'start_date': date.today()
+    })
+    print(Loan_Type.objects.filter(name='Mortgage').first())
+    context = {
+        'form': form,
+        'loans': loans,
+    }
+    return render(request, 'liabilities/details.html', context)
 
 @login_required(login_url='/accounts/login')
 def add_loan(request):

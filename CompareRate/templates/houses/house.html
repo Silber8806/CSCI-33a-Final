@@ -68,6 +68,11 @@
             <li class="list-group-item">High Estimate: ${{ house.estimate_range_high|floatformat:2|intcomma }}</li>
         </ul>
     </div>
+    <div id="action-options">
+        <a href="{% url 'add_mortgage' house_name="House: "|add:house.address loan_amount=house.estimate %}">
+            <button id="add_mortgage" class="btn btn-primary">Add Mortgage</button>
+        </a>
+    </div>
     {% empty %}
     <h3> Zillow search found no houses!</h3>
     {% endfor %}

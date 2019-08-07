@@ -63,4 +63,7 @@ body {
 .card-body h2 {
   text-align: center; }
 
+#add_mortgage {
+  float: right; }
+
 /*# sourceMappingURL=styles.css.map */

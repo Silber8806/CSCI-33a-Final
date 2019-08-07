@@ -32,6 +32,9 @@
                     <a class="dropdown-item" href="{% url 'add_loan' %}">
                         Add New Loan
                     </a>
+                    <a class="dropdown-item" href="{% url 'zipcode' %}">
+                        Add New House
+                    </a>
                 </div>
             </div>
             {% if active_loan %}
@@ -41,7 +44,11 @@
             {% endif %}
         </div>
         <div class="card-body">
-            <form method="POST" class="post-form" class="bordered">
+            {% if active_loan %}
+                <form method="POST" class="post-form" class="bordered" action="{% url 'detail' loan=active_loan.id %}">
+            {% else %}
+                <form method="POST" class="post-form" class="bordered" action="{% url 'detail' loan=0 %}">
+            {% endif %}
                 {% csrf_token %}
                 {{ form|crispy }}
                 <div id="action-options">
