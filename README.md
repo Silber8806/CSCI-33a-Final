@@ -27,7 +27,7 @@ The app is split up into 3 different apps: Accounts, Liabilities and Houses.
 * Liabilities -> Loan management app where you can add, delete or modify a loan and see amortization schedules
 as well as a summary of all your loans.  Auto-calculates things like monthly payment and interest owed.
 * Houses -> A Zillow Search application that scans an open addresses database extract for addresses to use
-against the Zillow API.  Open Addresses has 200k addresses for Cambridge, Ma (though you can get a few
+against the Zillow API.  Open Addresses has 20k/200k addresses for Cambridge, Ma (though you can get a few
 million globally).
 
 The website:
