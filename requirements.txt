@@ -3,3 +3,4 @@ django-crispy-forms
 python-dateutil
 requests
 lxml
+python-dotenv
