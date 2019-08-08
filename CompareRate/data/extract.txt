@@ -10,16 +10,14 @@ insert into houses_zipcodes(
 	'latitude',
 	'street',
 	'city',
-	'state',
-	'zipcode'
+	'state'
 )
 select
 	field1,
 	field2,
 	field3,
 	field4,
-	field5,
-	field6
+	field5
 from cambridge_ma_stage
 where field6 is not null
 

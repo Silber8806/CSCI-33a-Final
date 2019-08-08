@@ -43,8 +43,12 @@
                 <h5> Description: </h5>
                 <p class="card-text"> {{ house.description }}</p>
                 {% endif %}
+                <a href="{{ house.homedetail_url }}"> <p> See more details for {{ house.address }} on Zillow </p> </a>
         </div>
         <ul class="list-group list-group-flush">
+            <a href="http://www.zillow.com/">
+                <li class="list-group-item active">Zillow Urls:</li>
+            </a>
             <a href="{{ house.homedetail_url }}">
                 <li class="list-group-item">Home Details</li>
             </a>
@@ -54,6 +58,9 @@
         </ul>
         {% if house.details %}
         <ul class="list-group list-group-flush">
+            <a href="http://www.zillow.com/">
+                <li class="list-group-item active">Zillow House Details:</li>
+            </a>
             <li class="list-group-item">Type: {{ house.type }}</li>
             <li class="list-group-item">Bedrooms: {{ house.bedrooms }}</li>
             <li class="list-group-item">Bathrooms: {{ house.bathrooms }}</li>
@@ -63,9 +70,12 @@
         </ul>
         {% endif %}
         <ul class="list-group list-group-flush">
-            <li class="list-group-item">Low Estimate: ${{ house.estimate_range_low|floatformat:2|intcomma }}</li>
-            <li class="list-group-item">Zillow Estimate: ${{ house.estimate|floatformat:2|intcomma }}</li>
-            <li class="list-group-item">High Estimate: ${{ house.estimate_range_high|floatformat:2|intcomma }}</li>
+            <a href="http://www.zillow.com/">
+                <li class="list-group-item active">Zillow Zestimate® scores:</li>
+            </a>
+            <li class="list-group-item"><a href="#"> Zestimate® - Low : </a> ${{ house.estimate_range_low|floatformat:2|intcomma }}</li>
+            <li class="list-group-item">Zestimate®: ${{ house.estimate|floatformat:2|intcomma }}</li>
+            <li class="list-group-item">Zestimate® - High ${{ house.estimate_range_high|floatformat:2|intcomma }}</li>
         </ul>
     </div>
     <div id="action-options">
