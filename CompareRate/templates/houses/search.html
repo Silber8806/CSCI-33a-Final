@@ -1,0 +1,42 @@
+{% extends 'templates/base.html' %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %} CompareRate Search {% endblock %}
+
+{% block libraries %}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h4> Search Zillow for houses:</h4>
+    <div class="card-body">
+        <form class="bordered" action="{% url 'zipcode' %}" method="POST">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <div id="action-options">
+                <button id="loan-save-btn" type="submit" class="save btn btn-success">Search</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% if search %}
+<div class="container">
+    <h4>Searched for: {{ search }}</h4>
+
+    {% if result %}
+    <ul class="list-group">
+    {% for house in result %}
+        <a href="{% url 'house' house_id=house.id %}" > <li class="list-group-item"> {{ house }} </li> </a>
+    {% endfor %}
+    </ul>
+    {% else %}
+        <h3> No Results!</h3>
+    {% endif %}
+</div>
+{% endif %}
+{% endblock %}
+
+

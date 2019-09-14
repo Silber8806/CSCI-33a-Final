@@ -1,0 +1,56 @@
+{% extends 'templates/base.html' %}
+
+{% load static %}
+{% load humanize %}
+
+{% block title %} CompareRate - Amortization Schedule {% endblock %}
+
+{% block libraries %}
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
+<script type="text/javascript" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="{% static 'js/payment.js' %}"></script>
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+    {% regroup schedule by loan as loan_list %}
+
+    {% for loan in loan_list %}
+    <div data-id="{{ loan.grouper.id }}" class="payment_schedule">
+        <div class="row">
+            <h2> {{ loan.grouper.id }} - {{ loan.grouper.provider }}</h2>
+        </div>
+        <table class="table display table-striped table-hover table-responsive add-sort">
+            <thead>
+            <tr>
+                <th>Installment</th>
+                <th>Payment Type</th>
+                <th>Payment Date</th>
+                <th>Principal Before</th>
+                <th>Principal Paid</th>
+                <th>Principal Additional Paid
+                <th>Interest Paid</th>
+                <th>Total Payment</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for payment in loan.list %}
+            {% if payment.is_active %}
+            <tr data="payment-{{ payment.id }}">
+                <td> {{ payment.installment }}</td>
+                <td> {{ payment.payment_type }}</td>
+                <td> {{ payment.payment_date }}</td>
+                <td> ${{ payment.principal_base|floatformat:2|intcomma  }}</td>
+                <td> ${{ payment.principal_paid|floatformat:2|intcomma  }}</td>
+                <td> ${{ payment.addition_paid|floatformat:2|intcomma  }}</td>
+                <td> ${{ payment.interest_paid|floatformat:2|intcomma  }}</td>
+                <td> ${{ payment.total_paid|floatformat:2|intcomma  }}</td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endfor %}
+{% endblock %}

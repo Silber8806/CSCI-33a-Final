@@ -1,0 +1,200 @@
+{% extends 'templates/base.html' %}
+
+{% load static %}
+{% load humanize %}
+
+{% block title %} CompareRate - Accounts {% endblock %}
+
+{% block libraries %}
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css"/>
+<script type="text/javascript" src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="{% static 'js/index.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+
+<div class="container">
+    {% if loans %}
+    <h4> About CompareRate </h4>
+    <p> Add loans through the action button to see the total cost of your loan and the impact on cashflow! </p>
+    {% else %}
+    <h4> About CompareRate </h4>
+    <p> Add loans through the action button to see the total cost of your loan and the impact on cashflow! </p>
+    <h4><span class="badge badge-danger">Use Action button to add loans!</span></h4>
+    <br>
+    {% endif %}
+    <div class="row">
+        <h3 class="table-header"> Loans </h3>
+        <div class="dropdown show">
+            <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Actions
+            </a>
+
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <a class="dropdown-item" href="{% url 'add_loan' %}">Add Loan
+                <a class="dropdown-item" href="{% url 'zipcode' %}">Search Houses</a>
+            </div>
+        </div>
+    </div>
+
+    <table id="loans" class="table display table-striped table-hover table-responsive">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Provider</th>
+            <th>Type</th>
+            <th>Principal</th>
+            <th>Principal Left</th>
+            <th>Terms</th>
+            <th>Interest Rate</th>
+            <th> Start Date</th>
+            <th> End Date</th>
+            <th> Actions </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for loan in loans %}
+        <tr data="loan-{{ loan.id }}">
+            <td> {{ loan.id }}</td>
+            <td>{{ loan.provider }}</td>
+            <td>{{ loan.loan_type }}</td>
+            <td>${{ loan.principal|floatformat:2|intcomma }}</td>
+            <td>${{ loan.current_principal|floatformat:2|intcomma }}</td>
+            <td>{{ loan.interest_rate_pct }}%</td>
+            <td>{{ loan.terms }} Months</td>
+            <td>{{ loan.start_date }}</td>
+            <td>{{ loan.end_date }}</td>
+            <td>
+                <div class="dropdown show">
+                    <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Actions
+                    </a>
+
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <a class="dropdown-item" href="{% url 'detail' loan=loan.id %}">Edit</a>
+                        <a class="dropdown-item delete-item" data-id="{{ loan.id }}" href="#">Delete</a>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>${{ total_principal.principal__sum|floatformat:2|intcomma }}</td>
+            <td>${{ total_principal_left|floatformat:2|intcomma }}</td>
+            <td>{{ average_interest|floatformat:2|intcomma }}%</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        </tfoot>
+    </table>
+
+    {% if loans %}
+
+    <div class="row">
+        <h3 class="table-header"> Cashflow </h3>
+        <div class="dropdown show">
+            <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Actions
+            </a>
+
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <a class="dropdown-item" href="{% url 'payment_schedule' loan=0 %}">All Payment Schedules</a>
+            </div>
+        </div>
+    </div>
+    <table id="cashflow" class="table display table-striped table-hover table-responsive">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Provider</th>
+            <th>Type</th>
+            <th> Monthly Payment</th>
+            <th> Last Principal Paid</th>
+            <th> Last Interest Paid</th>
+            <th> Actions </th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for loan in loans %}
+        <tr data-id="{{ loan.id }}">
+            <td>{{ loan.id }}</td>
+            <td>{{ loan.provider }}</td>
+            <td>{{ loan.loan_type }}</td>
+            <td>${{ loan.monthly_payment|floatformat:2|intcomma }}</td>
+            <td>${{ loan.last_principal_payment|floatformat:2|intcomma }}</td>
+            <td>${{ loan.last_interest_payment|floatformat:2|intcomma }}</td>
+            <td>
+                <div class="dropdown show">
+                    <a class="btn btn-primary dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Actions
+                    </a>
+
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                        <a class="dropdown-item" href="{% url 'payment_schedule' loan=loan.id %}">Payment Schedule</a>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>${{ total_monthly_payments|floatformat:2|intcomma }}</td>
+            <td>${{ last_principal_paid_total|floatformat:2|intcomma }}</td>
+            <td>${{ last_interest_paid_total|floatformat:2|intcomma }}</td>
+        </tr>
+        </tfoot>
+    </table>
+
+    <div class="row">
+        <h3 class="table-header"> Loan Cost </h3>
+    </div>
+    <table id="total-cost" class="table display table-striped table-hover table-responsive">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Provider</th>
+            <th>Type</th>
+            <th>Principal</th>
+            <th>Total Interest Paid</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for loan in loans %}
+        <tr data-id="{{ loan.id }}">
+            <td>{{ loan.id }}</td>
+            <td>{{ loan.provider }}</td>
+            <td>{{ loan.loan_type }}</td>
+            <td>${{ loan.principal|floatformat:2|intcomma }}</td>
+            <td>${{ loan.loan_cost|floatformat:2|intcomma }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>${{ total_principal.principal__sum|floatformat:2|intcomma }}</td>
+            <td>${{ total_cost|floatformat:2|intcomma }}</td>
+        </tr>
+        </tfoot>
+    </table>
+</div>
+{% endif %}
+{% endblock %}

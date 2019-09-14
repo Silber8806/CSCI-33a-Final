@@ -1,0 +1,24 @@
+# download open addresses database...find CSV file for a city (we use cambridge here) and run bash like the below:
+cat city_of_cambridge.csv | tail -n+2 | awk -F ',' '{print $1","$2","$3" "$4", Cambridge, Ma"}' > cambridge_ma.csv
+
+#use SQLite Browser client to load data into a table called cambridge_ma_stage using import table from CSV button (or importer)
+#addresses found here...http://results.openaddresses.io/
+
+# run the following in SQLite Browser client:
+insert into houses_zipcodes(
+	'longitude',
+	'latitude',
+	'street',
+	'city',
+	'state'
+)
+select
+	field1,
+	field2,
+	field3,
+	field4,
+	field5
+from cambridge_ma_stage
+where field6 is not null
+
+# lost 1 row due to a null being in the field... thought it would be fine as this is a demo...  Took it out of the CSV.

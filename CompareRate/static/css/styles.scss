@@ -1,0 +1,86 @@
+/*
+    Prevent issue with font awesome...
+*/
+
+.font-awesome {
+    font-family:'FontAwesome'!important;
+    font-style: normal;
+    margin: 5px;
+}
+
+/*
+    Took CSS From the previous project for userforms etc.
+*/
+
+#user-form input[id^=id] {
+    width: 100%;
+}
+
+.form-errors {
+    list-style-type: none;
+    color: red;
+}
+
+#action-options {
+    display: flex;
+    justify-content: space-between;
+}
+
+/*
+    Justify handle fixed header...
+*/
+
+body {
+    padding-top: 100px; /*70px nabar height*/
+}
+
+/*
+    update loan form
+*/
+
+#loan-save-btn {
+    margin-left: auto;
+}
+
+.table-header {
+    margin-right: 20px;
+    padding-left: 18px;
+}
+
+#detail-loan-active {
+    margin-top: 20px;
+}
+
+/*
+    Schedule of payments
+*/
+
+.payment_schedule {
+    margin-bottom: 25px;
+}
+
+.paid-off {
+    color: red;
+}
+
+/*
+    House Search Carousel
+*/
+
+.card {
+    margin: 25px 0px;
+}
+
+.carousel {
+    padding: 10px;
+    max-width: 50%;
+    margin: 0 auto;
+}
+
+.card-body h2 {
+    text-align: center;
+}
+
+#add_mortgage {
+    float: right;
+}
